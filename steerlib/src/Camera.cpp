@@ -31,7 +31,7 @@ Camera::Camera()
 	m_pois.clear();
 
 	// Set curve type here
-	curve.setType(Util::catmullCurve);
+	curve.setType(Util::hermiteCurve);
 
 	// Default to no animation (simulation engine can override this)
 	animateCamera = false;

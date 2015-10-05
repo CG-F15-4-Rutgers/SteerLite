@@ -426,31 +426,28 @@ int DrawLib::_buildAgentDisplayList()
 
 	glPushMatrix();
 	{
-		glPushAttrib(GL_ENABLE_BIT);
-		{
-			glDisable(GL_CULL_FACE);
+		// raise the flag
+		glRotatef(-90,1,0,0);
 
-			// align cylinder to y axis
-			glRotatef(-90, 1, 0, 0);
+		// flag
+		drawQuad(Point(0.0f, 0.0f, 1.05f),
+			Point(0.5,  0.0f, 0.9f),
+			Point(0.0f, 0.0f, 0.75f),
+			Point(-0.02f, 0.0f, 0.9f));
 
-			// draw cylinder aligned w/ x axis
-			gluCylinder(_quadric, 1, 1, h, 32, 16);
-			glTranslatef(0, 0, h);
-			gluDisk(_quadric, 0, 1, 32, 16);
-		}
-		glPopAttrib();
+		drawQuad(Point(-0.02f,  0.0f,  0.9f),
+			Point(0.0f,  0.0f,  0.75f),
+			Point(0.5f,  0.0f, 0.9f),
+			Point(0.0f, 0.0f, 1.05f));
+
+		// flag pole
+
+		glColor(Color(0.6f, 0.6f, 0.6f));
+		gluCylinder(_quadric, 0.05, 0.05, 1.1, 32, 1);
+		glTranslatef(0.0f,  0.0f, 1.1f);
+		gluSphere(_quadric, .07, 16, 16);
 	}
 	glPopMatrix();
-
-	// draw arrow
-	//glColor3f(0.2f, 0.0f, 1.0f);
-	glColor3f(0.0f, 0.0f, 0.0f);
-
-
-	drawQuad(Point(1.0f, h+.01f, 0.0f),
-		Point(-0.6f, h+0.01f, -0.5f),
-		Point(-0.62f, h+0.01f, 0.0f),
-		Point(-0.6f, h+0.01f, 0.5f));
 
 	_endDefiningDisplayList(dl);
 
