@@ -48,7 +48,7 @@ Options specified by the command line will override options in this configuratio
         Options for the GLFW engine driver
         -->
             <!-- Starts the clock paused if "true". -->
-            <startWithClockPaused>true</startWithClockPaused>
+            <startWithClockPaused>false</startWithClockPaused>
             <!-- Position of the openGL window in x -->
             <windowPositionX>0</windowPositionX>
             <!-- Position of the openGL window in y -->
