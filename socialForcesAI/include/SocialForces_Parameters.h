@@ -28,8 +28,8 @@
 #define AGENT_B 0.08f // inverse proximity force importance
 #define AGENT_A 25.0f // 2000 / 80 Yep its just called A... inverse proximity force importance
 #define WALL_B 0.08f //  inverse proximity force importance
-#define WALL_A 25.0f //  proximity force importance
-#define FURTHEST_LOCAL_TARGET_DISTANCE 45
+#define WALL_A 50.0f //  proximity force importance
+#define FURTHEST_LOCAL_TARGET_DISTANCE 90
 
 
 #define MASS 1

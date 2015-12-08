@@ -20,6 +20,7 @@
 // #include "SimpleAgent.h"
 // #include "SocialForcesAIModule.h"
 #include "SocialForces_Parameters.h"
+#include "planning/AStarPlanner.h"
 
 
 /**
@@ -73,7 +74,7 @@ class SocialForcesAgent : public SteerLib::AgentInterface
         // void _doEulerStep(const Util::Vector & steeringDecisionForce, float dt);
 
         SocialForcesParameters _SocialForcesParams;
-
+        std::string _testCasePath;
         /**
              * \brief   Updates the three-dimensional position and three-dimensional velocity of this agent.
              */
@@ -108,7 +109,16 @@ class SocialForcesAgent : public SteerLib::AgentInterface
         bool reachedCurrentWaypoint();
         void updateMidTermPath();
         bool hasLineOfSightTo(Util::Point point);
-
+        bool runAStarPlanning();
+        bool runWallSqueeze();
+        bool runTwoWayHallway();
+        bool runPlaneEgress();
+        bool runPlaneIngress();
+        bool runCrowdCrossing();
+        bool runDoubleSqueeze();
+        bool runOfficeComplex();
+        bool runDoorTwoWay();
+        bool runRoundabout();
 
         void calcNextStep(float dt);
         Util::Vector calcRepulsionForce(float dt);
@@ -121,6 +131,9 @@ class SocialForcesAgent : public SteerLib::AgentInterface
         Util::Vector calcWallNormal(SteerLib::ObstacleInterface* obs);
         std::pair<Util::Point, Util::Point> calcWallPointsFromNormal(SteerLib::ObstacleInterface* obs, Util::Vector normal);
         Util::Vector calcObsNormal(SteerLib::ObstacleInterface* obs);
+
+        SteerLib::AStarPlanner astar;
+
 
         // For midterm planning stores the plan to the current goal
         std::vector<Util::Point> _midTermPath;

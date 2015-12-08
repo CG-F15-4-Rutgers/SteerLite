@@ -97,6 +97,7 @@ namespace SteerLib {
 	 *  - documentation of AgentGoalInfo.
 	 */
 	struct AgentInitialConditions {
+		std::string testCase;
 		/// The (optional) name that identifies an agent; useful for describing the role of an agent, or naming it as a dynamic target.
 		std::string name;
 		/// The agent's initial position.

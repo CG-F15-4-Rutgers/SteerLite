@@ -148,7 +148,7 @@ void Camera::apply()
 {
 #ifdef ENABLE_GUI
 	if (animateCamera)
-		curve.drawCurve(Util::gGreen, 5);
+	//	curve.drawCurve(Util::gGreen, 5);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(m_currentView.position.x, m_currentView.position.y, m_currentView.position.z,
