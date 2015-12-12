@@ -119,6 +119,7 @@ class SocialForcesAgent : public SteerLib::AgentInterface
         bool runOfficeComplex();
         bool runDoorTwoWay();
         bool runRoundabout();
+        bool runBottleneckSqueeze();
 
         void calcNextStep(float dt);
         Util::Vector calcRepulsionForce(float dt);

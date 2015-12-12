@@ -169,13 +169,21 @@ void SocialForcesAgent::reset(const SteerLib::AgentInitialConditions & initialCo
 	} else if(testcase == "plane_ingress") {
 		runPlaneIngress();
 	} else if(testcase == "crowd_crossing") {
+		//_SocialForcesParams.sf_agent_a = 0.1;
+		//_SocialForcesParams.sf_agent_b = 0.1;
+
 		runCrowdCrossing();
 	} else if(testcase == "office-complex") {
-		runOfficeComplex();
+		//runOfficeComplex();
+		runAStarPlanning();
+		astar = true;
 	} else if(testcase == "hallway-four-way-rounded-roundabout") {
 		runRoundabout();
 	} else if(testcase == "bottleneck-squeeze") {
-			std::cout << testcase;
+		_SocialForcesParams.sf_agent_a = 40; // 60 - 17454.2 //40 11976
+		_SocialForcesParams.sf_agent_b = 0.5;
+		runBottleneckSqueeze();
+		
 	} else if(testcase == "doorway-two-way") {
 		runDoorTwoWay();
 	} else if(testcase == "double-squeeze") {
@@ -760,9 +768,10 @@ void SocialForcesAgent::updateLocalTarget()
  * puts that path in midTermPath
  */
 bool SocialForcesAgent::runDoorTwoWay() {
+	// 462.377 --> 429.236
+
 	SteerLib::AgentGoalInfo goal = _goalQueue.front();
 	_goalQueue.pop();
-
 	if(goal.targetLocation.x<0) {
 		SteerLib::AgentGoalInfo waypoint1;
 		waypoint1.targetLocation = Point(6,0,2);
@@ -773,6 +782,10 @@ bool SocialForcesAgent::runDoorTwoWay() {
 		/*SteerLib::AgentGoalInfo waypoint3;
 		waypoint3.targetLocation = Point(0,0,0);
 		_goalQueue.push(waypoint3);*/
+	}else{
+		SteerLib::AgentGoalInfo waypoint1;
+		waypoint1.targetLocation = Point(0,0,0.5);
+		_goalQueue.push(waypoint1);
 	}
 
 	_goalQueue.push(goal);
@@ -844,6 +857,21 @@ bool SocialForcesAgent::runRoundabout() {
 
 	runLongTermPlanning();
 	return true;
+}
+
+bool SocialForcesAgent::runBottleneckSqueeze(){
+	SteerLib::AgentGoalInfo goal = _goalQueue.front();
+	_goalQueue.pop();
+    /*SteerLib::AgentGoalInfo waypoint1;
+    if (position().z > 0){
+    	waypoint1.targetLocation = Point(-11, 0, 1);
+    } else {
+    	waypoint1.targetLocation = Point(-11, 0, -1);
+    }
+	_goalQueue.push(waypoint1);
+	*/_goalQueue.push(goal);			
+    runLongTermPlanning();
+    return true;
 }
 
 bool SocialForcesAgent::runPlaneEgress() {
@@ -935,20 +963,20 @@ bool SocialForcesAgent::runCrowdCrossing() {
 		SteerLib::AgentGoalInfo goal = _goalQueue.front();
 		_goalQueue.pop();
 		SteerLib::AgentGoalInfo waypoint2;
-		waypoint2.targetLocation = Point(position().x, 0, 2);
+		waypoint2.targetLocation = Point(position().x+10, 0, 2);
 		_goalQueue.push(waypoint2);
 		SteerLib::AgentGoalInfo waypoint1;
-		waypoint1.targetLocation = Point(105, 0, 2);
+		waypoint1.targetLocation = Point(90, 0, 2);
 		_goalQueue.push(waypoint1);						
 		_goalQueue.push(goal);
 	} else if (position().z < -3.5){
 		SteerLib::AgentGoalInfo goal = _goalQueue.front();
 		_goalQueue.pop();
 		SteerLib::AgentGoalInfo waypoint2;
-		waypoint2.targetLocation = Point(position().x, 0, -2);
+		waypoint2.targetLocation = Point(position().x+10, 0, -2);
 		_goalQueue.push(waypoint2);
 		SteerLib::AgentGoalInfo waypoint1;
-		waypoint1.targetLocation = Point(105, 0, -2);
+		waypoint1.targetLocation = Point(90, 0, -2);
 		_goalQueue.push(waypoint1);						
 		_goalQueue.push(goal);
 	} else{
@@ -956,7 +984,7 @@ bool SocialForcesAgent::runCrowdCrossing() {
 			SteerLib::AgentGoalInfo goal = _goalQueue.front();
 			_goalQueue.pop();
 			SteerLib::AgentGoalInfo waypoint1;
-			waypoint1.targetLocation = Point(105, 0, position().z);
+			waypoint1.targetLocation = Point(90, 0, position().z);
 			_goalQueue.push(waypoint1);			
 			_goalQueue.push(goal);	
 		}
@@ -986,18 +1014,20 @@ bool SocialForcesAgent::runOfficeComplex() {
     return true;
 }
 
-bool SocialForcesAgent::runDoubleSqueeze() {
+bool SocialForcesAgent::runDoubleSqueeze() 
+{	// 525.602 --> 462.446
 	SteerLib::AgentGoalInfo goal = _goalQueue.front();
 	_goalQueue.pop();
 	SteerLib::AgentGoalInfo waypoint2;
+	_SocialForcesParams.sf_wall_a = 18; 
 	if (position().x > 0){
-		waypoint2.targetLocation = Point(0, 0, 0.68);
+		waypoint2.targetLocation = Point(-0.85, 0, 1.2);
 		_goalQueue.push(waypoint2);	
 		/*SteerLib::AgentGoalInfo waypoint1;
 		waypoint1.targetLocation = Point(-10, 0, 0);
 		_goalQueue.push(waypoint1);	*/		
 	}else{
-		waypoint2.targetLocation = Point(0, 0, -0.68);
+		waypoint2.targetLocation = Point(0.85, 0, -1.2);
 		_goalQueue.push(waypoint2);	
 		/* SteerLib::AgentGoalInfo waypoint1;
 		waypoint1.targetLocation = Point(10, 0, 0);
@@ -1014,9 +1044,14 @@ bool SocialForcesAgent::runWallSqueeze() {
     SteerLib::AgentGoalInfo waypoint1;
     /* z value midpoint between -0.1 and 1.25 */
     // (-0.5,0,0.4)	580.677
-    // (-0.4,0,0.4)	579.416
-    waypoint1.targetLocation = Point(-0.4,0,0.4);
-    _goalQueue.push(waypoint1);
+    // (-0.4,0,0.4)	579.416 // 547.51
+    if (position().x>0){
+    	_SocialForcesParams.sf_wall_a = 10; 
+    }else{
+    	 _SocialForcesParams.sf_body_force = 3000;
+    	waypoint1.targetLocation = Point(-0.4,0,0.7);
+    	_goalQueue.push(waypoint1);	
+    }
     _goalQueue.push(goal);
     /* run social forces */
     runLongTermPlanning();
